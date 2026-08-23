@@ -3,6 +3,7 @@
 #include "Buildings/BuildingBase.h"
 #include "Buildings/PrototypeBuildings.h"
 #include "Data/BuildingDefinition.h"
+#include "Engine/OverlapResult.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/Pawn.h"

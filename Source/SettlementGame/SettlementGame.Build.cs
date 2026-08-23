@@ -6,6 +6,9 @@ public class SettlementGame : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+        PublicIncludePaths.Add(ModuleDirectory);
+        PrivateIncludePaths.Add(ModuleDirectory);
+
         PublicDependencyModuleNames.AddRange(new[]
         {
             "Core",
