@@ -1,0 +1,24 @@
+# Unreal generated files
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+.vscode/
+.idea/
+*.VC.db
+*.VC.opendb
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
+
+# Build products and local editor state
+*.opensdf
+*.sdf
+*.tmp
+*.user
+*.log
+
+# Keep authored Unreal assets; do not ignore Content/*.uasset.
