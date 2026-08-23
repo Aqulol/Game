@@ -18,7 +18,7 @@
 
 ASettlementWorkerCharacter::ASettlementWorkerCharacter()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     WorkerName = NSLOCTEXT("Settlement", "DefaultWorkerName", "Aldric");

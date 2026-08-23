@@ -1,5 +1,7 @@
 #include "Player/SettlementPlayerCharacter.h"
 
+#include "GameFramework/PlayerController.h"
+#include "InputCoreTypes.h"
 #include "Buildings/BuildingPlacementComponent.h"
 #include "Buildings/PrototypeBuildings.h"
 #include "Camera/CameraComponent.h"
@@ -10,7 +12,7 @@
 
 ASettlementPlayerCharacter::ASettlementPlayerCharacter()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
     GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
 
     FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
@@ -24,14 +26,35 @@ ASettlementPlayerCharacter::ASettlementPlayerCharacter()
     Interaction = CreateDefaultSubobject<UInteractionComponent>(TEXT("Interaction"));
     BuildingPlacement = CreateDefaultSubobject<UBuildingPlacementComponent>(TEXT("BuildingPlacement"));
 }
+void ASettlementPlayerCharacter::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
 
+    const APlayerController* PlayerController =
+        Cast<APlayerController>(GetController());
+
+    if (!PlayerController || !IsLocallyControlled())
+    {
+        return;
+    }
+
+    const float ForwardValue =
+        (PlayerController->IsInputKeyDown(EKeys::W) ? 1.0f : 0.0f) -
+        (PlayerController->IsInputKeyDown(EKeys::S) ? 1.0f : 0.0f);
+
+    const float RightValue =
+        (PlayerController->IsInputKeyDown(EKeys::D) ? 1.0f : 0.0f) -
+        (PlayerController->IsInputKeyDown(EKeys::A) ? 1.0f : 0.0f);
+
+    MoveForward(ForwardValue);
+    MoveRight(RightValue);
+}
 void ASettlementPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
     check(PlayerInputComponent);
 
-    PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ASettlementPlayerCharacter::MoveForward);
-    PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ASettlementPlayerCharacter::MoveRight);
+  
     PlayerInputComponent->BindAxis(TEXT("Turn"), this, &APawn::AddControllerYawInput);
     PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
 
@@ -50,7 +73,10 @@ void ASettlementPlayerCharacter::MoveForward(const float Value)
 {
     if (!FMath::IsNearlyZero(Value))
     {
-        AddMovementInput(FRotationMatrix(FRotator(0.0f, GetControlRotation().Yaw, 0.0f)).GetUnitAxis(EAxis::X), Value);
+        AddMovementInput(
+            FRotationMatrix(FRotator(0.0f, GetControlRotation().Yaw, 0.0f)).GetUnitAxis(EAxis::X),
+            Value,
+            true);
     }
 }
 
@@ -58,10 +84,12 @@ void ASettlementPlayerCharacter::MoveRight(const float Value)
 {
     if (!FMath::IsNearlyZero(Value))
     {
-        AddMovementInput(FRotationMatrix(FRotator(0.0f, GetControlRotation().Yaw, 0.0f)).GetUnitAxis(EAxis::Y), Value);
+        AddMovementInput(
+            FRotationMatrix(FRotator(0.0f, GetControlRotation().Yaw, 0.0f)).GetUnitAxis(EAxis::Y),
+            Value,
+            true);
     }
 }
-
 void ASettlementPlayerCharacter::InteractPressed()
 {
     if (!BuildingPlacement->IsPlacementActive())

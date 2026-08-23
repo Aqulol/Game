@@ -17,7 +17,7 @@ class SETTLEMENTGAME_API ASettlementPlayerCharacter : public ACharacter
 
 public:
     ASettlementPlayerCharacter();
-
+    virtual void Tick(float DeltaSeconds) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
     UFUNCTION(BlueprintPure, Category = "Player")

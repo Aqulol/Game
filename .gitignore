@@ -22,3 +22,5 @@ Saved/
 *.log
 
 # Keep authored Unreal assets; do not ignore Content/*.uasset.
+
+*.slnx
